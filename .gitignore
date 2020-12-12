@@ -1,0 +1,15 @@
+# 先忽略所有文件，必须放在开头
+/*
+
+# 跟踪作业文件夹
+!HW[0-9]/
+
+# .gitignore等几种文件需要跟踪
+!.gitignore
+!README.md
+
+
+# 但是忽略其中这几种文件
+*.aux
+*.log
+*.synctex.gz
