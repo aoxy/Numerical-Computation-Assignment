@@ -1,0 +1,171 @@
+\documentclass[12pt,a4paper,utf8]{ctexart}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subfig}
+\usepackage{cite}
+\usepackage[ntheorem]{empheq}
+\usepackage{enumitem}
+\usepackage{fullpage}
+\usepackage{cleveref}
+\usepackage{cellspace}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{dkgreen}{rgb}{.068,.578,.068}
+\definecolor{dkpurple}{rgb}{.320,.064,.680}
+
+% set Matlab styles
+\lstset{
+   language=Matlab,
+   keywords={break,case,catch,continue,else,elseif,end,for,function,
+      global,if,otherwise,persistent,return,switch,try,while},
+   basicstyle=\ttfamily,
+   keywordstyle=\color{blue}\bfseries,
+   commentstyle=\color{dkgreen},
+   stringstyle=\color{dkpurple},
+   backgroundcolor=\color{white},
+   tabsize=4,
+   showspaces=false,
+   breaklines,%自动换行
+   showstringspaces=false,
+   numbers=left,   % 行号的位置在左边
+   columns=fixed,
+}
+
+\begin{document}
+\CJKfamily{zhkai}
+
+
+\begin{center}
+   \textbf{作业三}\\
+   \textbf{敖旭扬 ~~~~~ PB18071477 ~~~~~ \today}\\
+\end{center}
+\textit{}
+\vspace{\baselineskip}
+
+\begin{enumerate}
+   \item[第一题] 解：
+   \item[\textbf{(a)}]
+         由Gauss顺序消元法的步骤和过程，第一次迭代后$A$的第一列完成消去时，有
+         \begin{eqnarray}
+            \begin{aligned}
+               a_{ij}^{(1)}=a_{ij}-\dfrac{a_{i1}}{a_{11}}a_{1j},\quad i,j=2,3,\cdots,n
+            \end{aligned}
+         \end{eqnarray}
+         由于$A$是对称矩阵且满足$a_{11} \neq 0$，所以有
+         \begin{eqnarray}
+            \begin{aligned}
+               a_{ij}=a_{ji},\quad i,j=1,2,3,\cdots,n
+            \end{aligned}
+         \end{eqnarray}
+         所以
+         \begin{eqnarray}
+            \begin{aligned}
+               a_{ij}^{(1)}=a_{ij}-\dfrac{a_{i1}}{a_{11}}a_{1j}=a_{ji}-\dfrac{a_{1i}}{a_{11}}a_{j1}=a_{ji}-\dfrac{a_{j1}}{a_{11}}a_{1i}=a_{ji}^{(1)},\quad i,j=2,3,\cdots,n
+            \end{aligned}
+         \end{eqnarray}
+         从而$A^{(1)}$是对称的。
+   \item[\textbf{(b)}]
+         计算一个正定(positive definite)矩阵LU分解的算法如下：
+         \lstinputlisting[frame=single]{src/LU.m}
+   \item[\textbf{(c)}]
+         使用Cholesky分解解方程组$Ax = b$的\textsc{Matlab}程序显示如下：
+         \lstinputlisting[frame=single]{src/p1c.m}
+
+         根据上述程序在命令行输出的结果（以注释形式写在了上面的代码中），
+         原题所求的解为：
+         \begin{eqnarray}
+            \begin{aligned}
+               x=\begin{bmatrix}
+                  1 \\
+                  2 \\
+                  1 \\
+                  2
+               \end{bmatrix}
+               \nonumber
+            \end{aligned}
+         \end{eqnarray}
+
+   \item[第二题] 解：
+   \item[\textbf{(a)}] 证明：\\
+         Richardson迭代方法的迭代关系式为：
+         \begin{eqnarray}
+            x^{(k+1)}=\omega I(\frac{1}{\omega}I-A)x^{(k)}+\omega Ib=(I-\omega A)x^{(k)}+\omega b
+         \end{eqnarray}
+         令
+         \begin{eqnarray}
+            G_\omega =I-\omega A
+         \end{eqnarray}
+         则
+         \begin{eqnarray}
+            x^{(k+1)}=G_\omega x^{(k)}+\omega b
+         \end{eqnarray}
+         根据课本第五章开头处对迭代法收敛性的讨论可知，上述Richardson 迭代方法收敛的充要条件为
+         谱半径$\rho(G_\omega)<1$，又$A$是正定矩阵，所以它的特征值均为正数，由已知，$G_\omega$的特征值为$1-\omega \lambda_i$，其中
+         $0<\lambda_1 \leq \lambda_i \leq \lambda_n$，则
+         \begin{eqnarray}
+            \rho(G_\omega)=max|1 − \omega \lambda_i|<1
+         \end{eqnarray}
+         则对任意$\lambda_i$，需要满足
+         \begin{eqnarray}
+            0<\omega \lambda_i<2
+         \end{eqnarray}
+         即
+         \begin{eqnarray}
+            \omega<2/\lambda_n
+         \end{eqnarray}
+   \item[\textbf{(b)}]
+         由\textbf{(a)}得，
+         \begin{eqnarray}
+            \rho(G_\omega)=\max|1 − \omega \lambda_i| = \max(1 − \omega \lambda_1,\omega \lambda_n-1)
+         \end{eqnarray}
+         应该使得收敛速度尽量快，所以$\rho(G_\omega)$应该尽量小，即取
+         \begin{eqnarray}
+            \rho(G_\omega)=\min_\omega \max(1 − \omega \lambda_1,\omega \lambda_n-1)
+         \end{eqnarray}
+         所以$\omega$的最佳值为
+         \begin{eqnarray}
+            \omega_b = \arg \min_\omega \max(1 − \omega \lambda_1,\omega \lambda_n-1)=\dfrac{2}{\lambda_1+\lambda_n}
+         \end{eqnarray}
+         且
+         \begin{eqnarray}
+            \rho(G_\omega)=\left\{
+               \begin{array}{rcl}
+               1 − \omega \lambda_1 & & {\omega \leq \omega_b}\\
+               \dfrac{\lambda_n-\lambda_1}{\lambda_n+\lambda_1} & & {\omega = \omega_b}\\
+               \omega \lambda_n-1 & & {\omega \geq \omega_b}
+               \end{array} \right.
+         \end{eqnarray}
+   \item[\textbf{(c)}] 
+         使用Richardson迭代方法解$Ax = b$的\textsc{Matlab}程序显示如下：
+         \lstinputlisting[frame=single]{src/p2c.m}
+         上述程序某一次执行输出的结果为：
+         \lstinputlisting[frame=single,numbers=none]{src/p2c_outs.txt}
+         同时输出的收敛迭代次数随$\omega$变化的semilogy图为：
+         \begin{figure}[H]
+            \centering
+            \includegraphics[width=1\textwidth]{fig/p2c.eps}
+            \caption{寻找Richardson迭代方法的最佳$\omega$}
+         \end{figure}
+         这一结果验证了最佳$\omega$是$\omega_b$，它使得收敛速度最快。
+   \item[第三题] 解：
+   \item[\textbf{(a)}]$I(f)=\int_a^b f(x) \mathrm{d} x$关于积分节点$\{x_1,x_2,\cdots,x_n\}$的Gauß积分的数值积分公式为
+   \begin{eqnarray}
+      I_n(f)=\sum_{i=1}^n\alpha_if(x_i)
+   \end{eqnarray}
+   $n=6$时，代数精度不超过$2n-1=11$，所以依次取线性不相关的$f(x)=1,x,x^2,\cdots,x^{11}$，即$f(x)=x^k,\quad k=0,1,\cdots,11$，根据
+   \begin{eqnarray}
+      I_n(f)=I(f)
+   \end{eqnarray}
+   取$a=-1,b=1$得
+   \begin{eqnarray}
+      \sum_{i=1}^n\alpha_{ki} x_i^k =\int_{-1}^{1} x^k \mathrm{d}x=\dfrac{1-(-1)^{k+1}}{k+1} \quad,\quad k=0,1,\cdots,11
+   \end{eqnarray}
+   \item[\textbf{(b)}]截断。
+   \item[\textbf{(c)}]由(a)
+   \item[\textbf{(d)}]一阶
+\end{enumerate}
+
+\end{document}

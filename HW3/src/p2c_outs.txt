@@ -1,0 +1,2 @@
+bestomega = 0.333330	k=70
+omegab = 0.333333	k=70
